@@ -2,9 +2,16 @@
 
 const { run } = require('../../utils/test-utils');
 const { stat, readFile } = require('fs');
-const { resolve } = require('path');
+const { resolve, join } = require('path');
+const rimraf = require('rimraf');
 
 describe(' multiple entries', () => {
+    beforeEach((done) => {
+        rimraf(join(__dirname, './bin/*'), () => {
+            done();
+        });
+    });
+
     it('should allow multiple entry files', (done) => {
         const { stderr, stdout, exitCode } = run(__dirname, ['./src/a.js', './src/b.js']);
 
@@ -26,9 +33,13 @@ describe(' multiple entries', () => {
     });
 
     it('should allow multiple entry flags', (done) => {
+<<<<<<< HEAD
         const { stderr, stdout, exitCode } = run(__dirname, ['--entry', './src/a.js', '--entry', './src/b.js']);
 
         expect(exitCode).toBe(0);
+=======
+        const { stderr, stdout } = run(__dirname, ['--entry', './src/a.js', '--entry', './src/b.js']);
+>>>>>>> tests: clear old output files before each test
         expect(stderr).toBeFalsy();
         expect(stdout).toBeTruthy();
 

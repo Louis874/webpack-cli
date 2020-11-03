@@ -2,9 +2,19 @@
 
 const { run, isWebpack5 } = require('../../utils/test-utils');
 const { stat, readFile } = require('fs');
-const { resolve } = require('path');
+const { resolve, join } = require('path');
+const rimraf = require('rimraf');
 
 describe('entry flag', () => {
+    beforeEach((done) => {
+        rimraf(join(__dirname, './bin/*'), () => {
+            done();
+        });
+        rimraf(join(__dirname, './dist/*'), () => {
+            done();
+        });
+    });
+
     it('should resolve the path to src/index.cjs', (done) => {
         const { stderr, stdout, exitCode } = run(__dirname, ['--entry', './src/index.cjs', '-o', './dist/'], false);
 
@@ -43,8 +53,15 @@ describe('entry flag', () => {
         });
     });
 
+<<<<<<< HEAD
     it('should resolve the path to /src/a.js as ./src/a.js for webpack-5 only', (done) => {
         const { stderr, stdout, exitCode } = run(__dirname, ['--entry', '/src/a.js']);
+=======
+    it('should resolve the path to /src/a.js as ./src/a.js', (done) => {
+        const { stderr, stdout } = run(__dirname, ['--entry', '/src/a.js']);
+        expect(stderr).toBeFalsy();
+        expect(stdout).toBeTruthy();
+>>>>>>> tests: clear old output files before each test
 
         if (!isWebpack5) {
             expect(exitCode).toBe(1);

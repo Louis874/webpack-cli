@@ -1,17 +1,10 @@
 'use strict';
 const { run } = require('../utils/test-utils');
 const { stat } = require('fs');
-const { resolve, join } = require('path');
-const rimraf = require('rimraf');
+const { resolve } = require('path');
 const { yellow } = require('colorette');
 
 describe('--hot flag', () => {
-    beforeEach((done) => {
-        rimraf(join(__dirname, './bin/*'), () => {
-            done();
-        });
-    });
-
     it('should be successful when --hot is passed', (done) => {
         const { stderr, stdout, exitCode } = run(__dirname, ['--hot']);
 

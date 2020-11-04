@@ -2,16 +2,9 @@
 
 const { run } = require('../../utils/test-utils');
 const { stat, readFile } = require('fs');
-const { resolve, join } = require('path');
-const rimraf = require('rimraf');
+const { resolve } = require('path');
 
 describe(' multiple entries', () => {
-    beforeEach((done) => {
-        rimraf(join(__dirname, './bin/*'), () => {
-            done();
-        });
-    });
-
     it('should allow multiple entry files', (done) => {
         const { stderr, stdout, exitCode } = run(__dirname, ['./src/a.js', './src/b.js']);
 

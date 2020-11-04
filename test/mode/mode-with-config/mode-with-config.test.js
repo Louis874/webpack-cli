@@ -1,18 +1,10 @@
 'use strict';
 const { stat, readFile } = require('fs');
-const { resolve, join } = require('path');
-// eslint-disable-next-line node/no-extraneous-require
-const rimraf = require('rimraf');
+const { resolve } = require('path');
 // eslint-disable-next-line node/no-unpublished-require
 const { run } = require('../../utils/test-utils');
 
 describe('mode flags with config', () => {
-    beforeEach((done) => {
-        rimraf(join(__dirname, './bin/*'), () => {
-            done();
-        });
-    });
-
     it('should run in production mode when --mode=production is passed', (done) => {
         const { stderr, stdout, exitCode } = run(__dirname, ['--mode', 'production', '--config', './webpack.config.js']);
 
@@ -52,8 +44,9 @@ describe('mode flags with config', () => {
         expect(stdout).toBeTruthy();
 
         // Should generate the appropriate files
-        stat(resolve(__dirname, './bin/main.js.OTHER.LICENSE.txt'), (err) => {
-            expect(err).toBeTruthy();
+        stat(resolve(__dirname, './bin/main.js.OTHER.LICENSE.txt'), (err, stats) => {
+            expect(err).toBe(null);
+            expect(stats.isFile()).toBe(true);
         });
 
         stat(resolve(__dirname, './bin/main.js'), (err, stats) => {

@@ -2,19 +2,9 @@
 
 const { run, isWebpack5 } = require('../../utils/test-utils');
 const { stat, readFile } = require('fs');
-const { resolve, join } = require('path');
-const rimraf = require('rimraf');
+const { resolve } = require('path');
 
 describe('entry flag', () => {
-    beforeEach((done) => {
-        rimraf(join(__dirname, './bin/*'), () => {
-            done();
-        });
-        rimraf(join(__dirname, './dist/*'), () => {
-            done();
-        });
-    });
-
     it('should resolve the path to src/index.cjs', (done) => {
         const { stderr, stdout, exitCode } = run(__dirname, ['--entry', './src/index.cjs', '-o', './dist/'], false);
 

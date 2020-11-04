@@ -53,15 +53,8 @@ describe('entry flag', () => {
         });
     });
 
-<<<<<<< HEAD
     it('should resolve the path to /src/a.js as ./src/a.js for webpack-5 only', (done) => {
         const { stderr, stdout, exitCode } = run(__dirname, ['--entry', '/src/a.js']);
-=======
-    it('should resolve the path to /src/a.js as ./src/a.js', (done) => {
-        const { stderr, stdout } = run(__dirname, ['--entry', '/src/a.js']);
-        expect(stderr).toBeFalsy();
-        expect(stdout).toBeTruthy();
->>>>>>> tests: clear old output files before each test
 
         if (!isWebpack5) {
             expect(exitCode).toBe(1);

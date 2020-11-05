@@ -195,6 +195,10 @@ class WebpackCLI {
         let options = this.compilerConfiguration;
         let outputOptions = this.outputConfiguration;
 
+        if (coloretteOptions.enabled && !args.color) {
+            coloretteOptions.enabled = args.color;
+        }
+
         const isRawOutput = typeof outputOptions.json === 'undefined';
 
         if (isRawOutput) {
@@ -266,12 +270,6 @@ class WebpackCLI {
         };
 
         compiler = this.createCompiler(options, callback);
-
-        if (compiler && outputOptions.interactive) {
-            const interactive = require('./utils/interactive');
-
-            interactive(compiler, options, outputOptions);
-        }
 
         return Promise.resolve();
     }

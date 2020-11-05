@@ -43,6 +43,25 @@ describe('colorts', () => {
         expect(exitCode).toBe(0);
     });
 
+    it('should disable colored output with --no-color', () => {
+        const { stderr, stdout, exitCode } = run(__dirname, ['--stats=verbose', '--no-color']);
+
+        expect(stderr).toBeFalsy();
+        const output = isWebpack5 ? 'successfully' : 'main.js';
+        expect(stdout).not.toContain(`\u001b[1m\u001b[32m${output}\u001b[39m\u001b[22m`);
+        expect(stdout).toContain(output);
+        expect(exitCode).toBe(0);
+    });
+
+    it('should work with the "stats" option and --color flags', () => {
+        const { stderr, stdout, exitCode } = run(__dirname, ['--stats=verbose', '--color']);
+
+        expect(stderr).toBeFalsy();
+        const output = isWebpack5 ? 'successfully' : 'main.js';
+        expect(stdout).toContain(`\u001b[1m\u001b[32m${output}\u001b[39m\u001b[22m`);
+        expect(exitCode).toBe(0);
+    });
+
     it('should work with the "stats" option from the configuration', () => {
         const { stderr, stdout, exitCode } = run(__dirname, ['--config=stats-string.webpack.config.js']);
 

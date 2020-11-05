@@ -4,6 +4,7 @@ const logger = require('./utils/logger');
 const { isCommandUsed } = require('./utils/arg-utils');
 const argParser = require('./utils/arg-parser');
 const leven = require('leven');
+const { options: coloretteOptions } = require('colorette');
 
 process.title = 'webpack-cli';
 
@@ -22,6 +23,11 @@ const runCLI = async (cliArgs) => {
         // Handle the default webpack entry CLI argument, where instead of doing 'webpack-cli --entry ./index.js' you can simply do 'webpack-cli ./index.js'
         // If the unknown arg starts with a '-', it will be considered an unknown flag rather than an entry
         let entry;
+
+        // enable/disable colors
+        if (coloretteOptions.enabled && !parsedArgs.opts.color) {
+            coloretteOptions.enabled = parsedArgs.opts.color;
+        }
 
         if (parsedArgs.unknownArgs.length > 0) {
             entry = [];

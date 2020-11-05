@@ -2,7 +2,7 @@ const packageExists = require('./utils/package-exists');
 const webpack = packageExists('webpack') ? require('webpack') : undefined;
 const logger = require('./utils/logger');
 const webpackMerge = require('webpack-merge');
-const { core, coreFlagMap } = require('./utils/cli-flags');
+const { core, flagsFromCore } = require('./utils/cli-flags');
 const argParser = require('./utils/arg-parser');
 const assignFlagDefaults = require('./utils/flag-defaults');
 const { writeFileSync } = require('fs');
@@ -32,6 +32,10 @@ class WebpackCLI {
     _handleCoreFlags(parsedArgs) {
         const coreCliHelper = require('webpack').cli;
         if (!coreCliHelper) return;
+        const coreFlagMap = flagsFromCore.reduce((acc, cur) => {
+            acc.set(cur.name, cur);
+            return acc;
+        }, new Map());
         const coreConfig = Object.keys(parsedArgs)
             .filter((arg) => {
                 return coreFlagMap.has(toKebabCase(arg));
@@ -51,7 +55,10 @@ class WebpackCLI {
     async _baseResolver(cb, parsedArgs, strategy) {
         const resolvedConfig = await cb(parsedArgs, this.compilerConfiguration);
         this._mergeOptionsToConfiguration(resolvedConfig.options, strategy);
-        this._mergeOptionsToOutputConfiguration(resolvedConfig.outputOptions);
+
+        if (resolvedConfig.outputOptions) {
+            this.outputConfiguration = Object.assign(this.outputConfiguration, resolvedConfig.outputOptions);
+        }
     }
 
     /**
@@ -120,19 +127,6 @@ class WebpackCLI {
                     this.compilerConfiguration = webpackMerge(this.compilerConfiguration, options);
                 }
             }
-        }
-    }
-
-    /**
-     * Responsible for creating and updating the new  output configuration
-     *
-     * @param {Object} options Output options emitted by the group helper
-     * @private
-     * @returns {void}
-     */
-    _mergeOptionsToOutputConfiguration(options) {
-        if (options) {
-            this.outputConfiguration = Object.assign(this.outputConfiguration, options);
         }
     }
 
